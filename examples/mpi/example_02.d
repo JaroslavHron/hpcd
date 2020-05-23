@@ -12,6 +12,7 @@
 import mpi.mpi;
 import std.stdio;
 import std.string;
+import std.conv;
 
 int main(string[] args) {
   MPI_Init(args);
@@ -25,12 +26,12 @@ int main(string[] args) {
     for (int partner = 1; partner < size; partner++){
       
       MPI_Status stat;
-      MPI_Recv(cast(void*)greeting.ptr, greeting.length, MPI_BYTE, partner, 1, MPI_COMM_WORLD, &stat);
+      MPI_Recv(cast(void*)greeting.ptr, to!int(greeting.length), MPI_BYTE, partner, 1, MPI_COMM_WORLD, &stat);
       writeln(greeting);
     }
   }
   else {
-    MPI_Send(cast(void*)greeting.ptr, greeting.length, MPI_BYTE, 0,1, MPI_COMM_WORLD);
+    MPI_Send(cast(void*)greeting.ptr, to!int(greeting.length), MPI_BYTE, 0,1, MPI_COMM_WORLD);
   }
   
   if (my_rank == 0) writeln("That is all for now!\n");

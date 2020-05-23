@@ -58,7 +58,7 @@ extern(C) {
 immutable PETSC_MAX_PATH_LEN = 4096;
 
 PetscErrorCode   PetscOptionsGetString(const char* pre, in string name, out string result, out PetscBool flg) {
-  char c[PETSC_MAX_PATH_LEN];
+  char[PETSC_MAX_PATH_LEN] c;
   PetscErrorCode ierr = PetscOptionsGetString(pre, toStringz(name), c.ptr, PETSC_MAX_PATH_LEN, &flg);
   result = to!string(c);
   return ierr;

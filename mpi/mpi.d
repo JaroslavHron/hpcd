@@ -27,7 +27,7 @@ struct MPI_Status {
   int MPI_TAG;
   int MPI_ERROR;
   // Additional fields for implementation's use
-  int reserved[10]; // Make bigger than needed just in case
+  int[10] reserved; // Make bigger than needed just in case
 }
 
 // MPI_Aint not yet defined so some functions missing
@@ -198,9 +198,9 @@ extern(C) {
                      MPI_Group *newgroup);
   int MPI_Group_intersection(MPI_Group group1, MPI_Group group2, 
                              MPI_Group *newgroup);
-  int MPI_Group_range_excl(MPI_Group group, int n, int ranges[][3], 
+  int MPI_Group_range_excl(MPI_Group group, int n, int [3][] ranges, 
                            MPI_Group *newgroup);
-  int MPI_Group_range_incl(MPI_Group group, int n, int ranges[][3], 
+  int MPI_Group_range_incl(MPI_Group group, int n, int [3][] ranges, 
                            MPI_Group *newgroup);
   int MPI_Group_rank(MPI_Group group, int *rank);
   int MPI_Group_size(MPI_Group group, int *size);
@@ -223,7 +223,7 @@ extern(C) {
   int MPI_Info_get_valuelen(MPI_Info info, char *key, int *valuelen, 
                             int *flag);
   int MPI_Info_set(MPI_Info info, char *key, char *value);
-  int MPI_Init(int *argc, char ***argv);
+  int MPI_Init(size_t *argc, char ***argv);
   int MPI_Initialized(int *flag);
   int MPI_Init_thread(int *argc, char ***argv, int required, 
                       int *provided);
@@ -335,23 +335,19 @@ extern(C) {
   int MPI_Status_set_cancelled(MPI_Status *status, int flag);
   int MPI_Status_set_elements(MPI_Status *status, MPI_Datatype datatype,
                               int count);
-  int MPI_Testall(int count, MPI_Request array_of_requests[], int *flag, 
-                  MPI_Status array_of_statuses[]);
-  int MPI_Testany(int count, MPI_Request array_of_requests[], int *index, 
-                  int *flag, MPI_Status *status);
+  int MPI_Testall(int count, MPI_Request[] array_of_requests, int *flag, MPI_Status[] array_of_statuses);
+  int MPI_Testany(int count, MPI_Request[] array_of_requests, int *index, int *flag, MPI_Status *status);
   int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status);
   int MPI_Test_cancelled(MPI_Status *status, int *flag);
-  int MPI_Testsome(int incount, MPI_Request array_of_requests[], 
-                   int *outcount, int array_of_indices[], 
-                   MPI_Status array_of_statuses[]);
+  int MPI_Testsome(int incount, MPI_Request[] array_of_requests, int *outcount, int[] array_of_indices, MPI_Status[] array_of_statuses);
   int MPI_Topo_test(MPI_Comm comm, int *status);
   //MPI_Fint MPI_Type_c2f(MPI_Datatype datatype);
   int MPI_Type_commit(MPI_Datatype *type);
   int MPI_Type_contiguous(int count, MPI_Datatype oldtype, 
                           MPI_Datatype *newtype);
   int MPI_Type_create_darray(int size, int rank, int ndims, 
-                             int gsize_array[], int distrib_array[], 
-                             int darg_array[], int psize_array[],
+                             int[] gsize_array, int[] distrib_array, 
+                             int[] darg_array, int[] psize_array,
                              int order, MPI_Datatype oldtype, 
                              MPI_Datatype *newtype);
   int MPI_Type_create_f90_complex(int p, int r, MPI_Datatype *newtype);
@@ -374,7 +370,7 @@ extern(C) {
                              int *type_keyval, void *extra_state);
   */
   int MPI_Type_create_indexed_block(int count, int blocklength,
-                                    int array_of_displacements[],
+                                    int[] array_of_displacements,
                                     MPI_Datatype oldtype,
                                     MPI_Datatype *newtype);
   /*
@@ -383,8 +379,8 @@ extern(C) {
                              MPI_Datatype array_of_types[], 
                              MPI_Datatype *newtype);
   */
-  int MPI_Type_create_subarray(int ndims, int size_array[], int subsize_array[], 
-                               int start_array[], int order, 
+  int MPI_Type_create_subarray(int ndims, int[] size_array, int[] subsize_array, 
+                               int[] start_array, int order, 
                                MPI_Datatype oldtype, MPI_Datatype *newtype);
   /*
   int MPI_Type_create_resized(MPI_Datatype oldtype, MPI_Aint lb, 
@@ -421,8 +417,8 @@ extern(C) {
   int MPI_Type_hvector(int count, int blocklength, MPI_Aint stride, 
                        MPI_Datatype oldtype, MPI_Datatype *newtype);
   */
-  int MPI_Type_indexed(int count, int array_of_blocklengths[], 
-                       int array_of_displacements[], 
+  int MPI_Type_indexed(int count, int[] array_of_blocklengths, 
+                       int[] array_of_displacements, 
                        MPI_Datatype oldtype, MPI_Datatype *newtype);
   //int MPI_Type_lb(MPI_Datatype type, MPI_Aint *lb);
   int MPI_Type_match_size(int typeclass, int size, MPI_Datatype *type);
@@ -588,7 +584,7 @@ void MPI_Get_globals() {
 
 void MPI_Init(string[] args) {
   // Convert arguments to C form
-  int argc = args.length;
+  size_t argc = args.length;
   char** argv = cast(char**) array(map!toStringz(args)).ptr;
 
   // Call C function
