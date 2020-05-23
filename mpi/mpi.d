@@ -4,7 +4,7 @@
 
 module mpi.mpi;
 
-import std.algorithm, std.array, std.string;
+import std.algorithm, std.array, std.string, std.conv;
 
 // Type declarations. Internal structure not needed, only the address
 // Note: C++ name mangling puts the implementation-specific structure names
@@ -223,7 +223,7 @@ extern(C) {
   int MPI_Info_get_valuelen(MPI_Info info, char *key, int *valuelen, 
                             int *flag);
   int MPI_Info_set(MPI_Info info, char *key, char *value);
-  int MPI_Init(size_t *argc, char ***argv);
+  int MPI_Init(int *argc, char ***argv);
   int MPI_Initialized(int *flag);
   int MPI_Init_thread(int *argc, char ***argv, int required, 
                       int *provided);
@@ -584,7 +584,7 @@ void MPI_Get_globals() {
 
 void MPI_Init(string[] args) {
   // Convert arguments to C form
-  size_t argc = args.length;
+  int argc = to!int(args.length);
   char** argv = cast(char**) array(map!toStringz(args)).ptr;
 
   // Call C function

@@ -15,7 +15,7 @@ import std.stdio;
 int main(string[] args) {
   Mat                   A;                /* matrix */
   PetscViewer           fd;               /* viewer */
-  string                file[2];          /* input file name */
+  string[2]             file;          /* input file name */
   IS                    isrow,iscol;      /* row and column permutations */
   PetscErrorCode        ierr;
   

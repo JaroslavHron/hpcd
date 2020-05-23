@@ -68,7 +68,7 @@ y
   /*
      Demonstrate various basic vector routines.
   */
-  PetscScalar dots[3];
+  PetscScalar[3] dots;
   PetscScalar dot;
   ierr = VecDot(x,x,&dot);CHKERRQ(ierr);
   ierr = VecMDot(x,3,z,dots);CHKERRQ(ierr);

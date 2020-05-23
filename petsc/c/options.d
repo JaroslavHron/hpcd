@@ -10,7 +10,7 @@ import std.conv;
 extern(C) {
   
   PetscErrorCode   PetscOptionsHasName(const char*,const char*,PetscBool *);
-  PetscErrorCode   PetscOptionsGetInt(const char*,const char*,PetscInt *,PetscBool *);
+  PetscErrorCode   PetscOptionsGetInt(const char*,const char*,const char*,PetscInt *,PetscBool *);
   PetscErrorCode   PetscOptionsGetBool(const char*,const char*,PetscBool  *,PetscBool *);
   PetscErrorCode   PetscOptionsGetReal(const char*,const char*,PetscReal *,PetscBool *);
   PetscErrorCode   PetscOptionsGetScalar(const char*,const char*,PetscScalar *,PetscBool *);
@@ -76,7 +76,7 @@ PetscErrorCode   PetscOptionsHasName(const char* b,PetscBool  *f) {
 }
 
 PetscErrorCode   PetscOptionsGetInt(const char* b,PetscInt *i,PetscBool  *f) {
-  return PetscOptionsGetInt(null,b,i,f);
+  return PetscOptionsGetInt(null,null,b,i,f);
 }
 
 PetscErrorCode   PetscOptionsGetBool(const char* b,PetscBool  *i,PetscBool  *f) {

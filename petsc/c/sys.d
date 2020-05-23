@@ -2,7 +2,7 @@
 //
 //
 
-import std.algorithm, std.array, std.string;
+import std.algorithm, std.array, std.string, std.conv;
 
 public import mpi.mpi;
 public import petsc.c.error; // Error handling interface
@@ -16,7 +16,7 @@ immutable PETSC_DECIDE = -1;
 enum PetscCopyMode { COPY_VALUES, OWN_POINTER, USE_POINTER};
 
 extern(C) {
-  PetscErrorCode PetscInitialize(size_t*,char***,const char*,const char*);
+  PetscErrorCode PetscInitialize(int*,char***,const char*,const char*);
   PetscErrorCode PetscFinalize();
   
   // Simple PETSc parallel IO for ASCII printing
@@ -35,7 +35,7 @@ extern(C) {
 // A wrapper to convert D's arguments to C style
 // and handle ierr
 void PetscInitialize(string[] args, string help="", string file = __FILE__, size_t line = __LINE__) {  
-  size_t argc = args.length;
+  int argc = to!int(args.length);
   char** argv = cast(char**) array(map!toStringz(args)).ptr;
 
   // Initialize PETSc
